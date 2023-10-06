@@ -1,0 +1,51 @@
+version: "3"
+services:
+  frontend:
+    # 개발환경을 위한 Dockerfile이 어디있는지 알려줌
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./frontend
+    # 코드 수정 후 다시 이미지를 빌드하는 것 없이 수정된 코드가 반영될 수 있게 Volume을 이용
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+    stdin_open: true # 리액트 앱 종료 시 나오는 버그를 잡아줌
+    environment:
+      - WDS_SOCKET_PORT=0
+
+  nginx:
+    restart: always # 재시작 정책
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "3000:80" #로컬 포트:컨테이너포트
+
+  backend:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./backend
+    container_name: app_backend
+    volumes:
+      - /app/node_modules
+      - ./backend:/app
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: moonsung1234
+      MYSQL_DATABASE: myapp
+      MYSQL_PORT: 3306
+
+  mysql:
+    build: ./mysql
+    restart: unless-stopped # 개발자가 임의로 멈추려고 할 때 빼고는 항상 재시작
+    container_name: app_mysql
+    platform: linux/amd64
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/mysql_data:/var/lib/mysql
+      - ./mysql/sqls/:/docker-entrypoint-initdb.d/
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: myapp

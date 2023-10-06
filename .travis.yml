@@ -1,0 +1,36 @@
+language: generic
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t moonsungkim/react-test-app -f ./frontend/Dockerfile.dev ./frontend
+
+script:
+  - docker run -e CI=true moonsungkim/react-test-app npm run test
+
+after_success:
+  - docker build -t moonsungkim/docker-frontend ./frontend
+  - docker build -t moonsungkim/docker-backend ./backend
+  - docker build -t moonsungkim/docker-nginx ./nginx
+
+  - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" --password-stdin
+
+  - docker push moonsungkim/docker-frontend
+  - docker push moonsungkim/docker-backend
+  - docker push moonsungkim/docker-nginx
+
+deploy:
+  provider: elasticbeanstalk
+  region: "ap-northeast-2"
+  app: "docker-fullstack-app"
+  env: "docker-fullstack-app-env"
+  bucket_name: "elasticbeanstalk-ap-northeast-2-123143254(수정해야함)"
+  bucket_path: "docker-fullstack-app"
+  on:
+    branch: main
+
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
