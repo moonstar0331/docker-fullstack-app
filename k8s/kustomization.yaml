@@ -1,0 +1,9 @@
+secretGenerator:
+- name: mysql-pass
+  literals:
+  - password=1234
+resources:
+  - mysql-deployment.yaml
+  - api-deployment.yaml
+  - web-deployment.yaml
+  - ingress-project.yaml
