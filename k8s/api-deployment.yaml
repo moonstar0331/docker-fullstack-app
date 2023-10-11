@@ -7,23 +7,10 @@ metadata:
 spec:
   ports:
     - port: 8080
+      targetPort: 5000
   selector:
     app: ingress-project
     tier: api
-  type: NodePort
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pv-claim
-  labels:
-    app: ingress-project
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -47,22 +34,16 @@ spec:
     spec:
       containers:
       - image: moonsungkim/backend
+        imagePullPolicy: Always
         name: api-app
         env:
-        - name: DB_HOST
-          value: mysql-service
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-pass
-              key: password
+          - name: DB_HOST
+            value: mysql
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-pass
+                key: password
         ports:
         - containerPort: 8080
           name: api-app
-        volumeMounts:
-        - name: api-persistent-storage
-          mountPath: /var/www/html
-      volumes:
-      - name: api-persistent-storage
-        persistentVolumeClaim:
-          claimName: pv-claim

@@ -7,6 +7,7 @@ metadata:
 spec:
   ports:
     - port: 80
+      targetPort: 3000
   selector:
     app: ingress-project
     tier: web
@@ -34,6 +35,7 @@ spec:
     spec:
       containers:
       - image: moonsungkim/frontend
+        imagePullPolicy: Always
         name: web-app
         ports:
         - containerPort: 80

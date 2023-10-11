@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-service
+  name: mysql
   labels:
     app: ingress-project
 spec:
@@ -10,7 +10,6 @@ spec:
   selector:
     app: ingress-project
     tier: mysql
-  clusterIP: None
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -19,11 +18,31 @@ metadata:
   labels:
     app: ingress-project
 spec:
+  volumeName: mysql-pv-volume
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Gi
+      storage: 10Gi
+  storageClassName: ""
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  labels:
+    app: ingress-project
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mysql/mysql_data
+    type: DirectoryOrCreate
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -45,21 +64,23 @@ spec:
         tier: mysql
     spec:
       containers:
-      - image: arm64v8/mysql
-        name: mysql
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-pass
-              key: password
-        ports:
-        - containerPort: 3306
+        - image: moonsungkim/mysql
           name: mysql
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-pass
+                key: password
+          - name: MYSQL_DATABASE
+            value: myapp
+          ports:
+          - containerPort: 3306
+            name: mysql
+          volumeMounts:
+          - name: mysql-persistent-storage
+            mountPath: /var/lib/mysql
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
-          claimName: pv-claim
+          claimName: mysql-pv-claim

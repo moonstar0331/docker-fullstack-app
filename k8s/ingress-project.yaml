@@ -1,13 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-project-ingress
+  name: ingress-nginx
 spec:
   rules:
-  - host: foo.bar.com
-    http:
+  - http:
       paths:
-      - path: /web
+      - path: /
         pathType: Prefix
         backend:
           service:
