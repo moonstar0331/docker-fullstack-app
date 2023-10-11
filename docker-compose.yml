@@ -3,7 +3,7 @@ services:
   frontend:
     # 개발환경을 위한 Dockerfile이 어디있는지 알려줌
     build:
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
       context: ./frontend
     # 코드 수정 후 다시 이미지를 빌드하는 것 없이 수정된 코드가 반영될 수 있게 Volume을 이용
     volumes:
@@ -23,7 +23,7 @@ services:
 
   backend:
     build:
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
       context: ./backend
     container_name: app_backend
     volumes:
@@ -32,7 +32,7 @@ services:
     environment:
       MYSQL_HOST: mysql
       MYSQL_USER: root
-      MYSQL_ROOT_PASSWORD: moonsung1234
+      MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: myapp
       MYSQL_PORT: 3306
 
