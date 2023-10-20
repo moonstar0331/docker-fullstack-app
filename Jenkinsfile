@@ -3,29 +3,9 @@ node {
          checkout scm
      }
      stage('Build image') {
-        step {
-            dir('/frontend/') {
-                script {
-                    frontend = docker.build("moonsungkim/frontend")
-                }
-            }
-        }
-
-        step {
-            dir('/backend/') {
-                script {
-                    backend = docker.build("moonsungkim/backend")
-                }
-            }
-        }
-
-        step {
-            dir('/mysql/') {
-                script {
-                    mysql = docker.build("moonsungkim/mysql")
-                }
-            }
-        }
+        frontend = docker.build("moonsungkim/frontend", "./frontend/")
+        backend = docker.build("moonsungkim/backend", "./backend/")
+        mysql = docker.build("moonsungkim/mysql", "./mysql/")
      }
      stage('Push image') {
          docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
