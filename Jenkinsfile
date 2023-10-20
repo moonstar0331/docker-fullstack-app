@@ -10,12 +10,22 @@ node {
                 }
             }
 
+            dir('/mysql/') {
+                script {
+                    mysql = docker.build("moonsungkim/mysql")
+                }
+            }
+        }
+
+        steps{
             dir('/backend/') {
                 script {
                     backend = docker.build("moonsungkim/backend")
                 }
             }
+        }
 
+        steps {
             dir('/mysql/') {
                 script {
                     mysql = docker.build("moonsungkim/mysql")
