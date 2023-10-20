@@ -3,7 +3,7 @@ node {
          checkout scm
      }
      stage('Build image') {
-        steps {
+        step {
             dir('/frontend/') {
                 script {
                     frontend = docker.build("moonsungkim/frontend")
@@ -11,7 +11,7 @@ node {
             }
         }
 
-        steps {
+        step {
             dir('/backend/') {
                 script {
                     backend = docker.build("moonsungkim/backend")
@@ -19,7 +19,7 @@ node {
             }
         }
 
-        steps {
+        step {
             dir('/mysql/') {
                 script {
                     mysql = docker.build("moonsungkim/mysql")
