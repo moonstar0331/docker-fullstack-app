@@ -10,7 +10,7 @@ node {
      stage('Push image') {
          docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
              frontend.push("${env.BUILD_NUMBER}")
-             front.push("latest")
+             frontend.push("latest")
 
              backend.push("${env.BUILD_NUMBER}")
              backend.push("latest")
