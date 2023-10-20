@@ -11,6 +11,14 @@ spec:
     app: ingress-project
     tier: mysql
 ---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: storage
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -18,31 +26,12 @@ metadata:
   labels:
     app: ingress-project
 spec:
-  volumeName: mysql-pv-volume
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 10Gi
-  storageClassName: ""
----
-
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: mysql-pv-volume
-  labels:
-    app: ingress-project
-spec:
-  storageClassName: ""
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /mysql/mysql_data
-    type: DirectoryOrCreate
-
+  storageClassName: storage
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -80,6 +69,8 @@ spec:
           volumeMounts:
           - name: mysql-persistent-storage
             mountPath: /var/lib/mysql
+          args:
+            - "--ignore-db-dir=lost+found"
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
