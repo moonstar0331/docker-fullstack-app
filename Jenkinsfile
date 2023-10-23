@@ -26,7 +26,7 @@ node {
      }
      stage('K8S Manifest Update') {
         // git 계정 로그인, 해당 리포지토리의 main 브랜치에서 클론
-        git credentialId: githubCredential,
+        git credentialsId: githubCredential,
         url: 'https://github.com/moonstar0331/docker-fullstack-app-manifest',
         branch: 'main'
 
