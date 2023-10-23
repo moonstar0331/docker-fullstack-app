@@ -32,6 +32,7 @@ node {
 
         // 이미지 태그 변경 후 메인 브랜치에 푸시
         sh "rm -rf .git"
+        sh "git init"
         sh "git config --global user.email 'moonsung0331@gmail.com'"
         sh "git config --global user.name 'moonstar0331'"
         sh "sed -i 's/frontend:./frontend:${currentBuild.number}/g' web-deployment.yaml"
