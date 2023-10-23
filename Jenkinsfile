@@ -31,6 +31,8 @@ node {
         branch: 'main'
 
         // 이미지 태그 변경 후 메인 브랜치에 푸시
+        sh "git config --global user.email 'moonsung0331@gmail.com'"
+        sh "git config --global user.name 'moonstar0331'"
         sh "sed -i 's/frontend:./frontend:${currentBuild.number}/g' web-deployment.yaml"
         sh "sed -i 's/backend:./backend:${currentBuild.number}/g' api-deployment.yaml"
         sh "sed -i 's/mysql:./mysql:${currentBuild.number}/g' mysql-deployment.yaml"
