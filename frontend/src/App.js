@@ -57,7 +57,7 @@ function App() {
                 <li key={index}>{list.value} </li>
             ))}
             <br />
-            안녕하세요.
+            안녕하세요.!!!!!!!!
             <form className="example" onSubmit={submitHandler}>
               <input
                   type="text"
@@ -65,7 +65,7 @@ function App() {
                   onChange={changeHandler}
                   value={value}
               />
-              <button type="submit">확인.</button>
+              <button type="submit">확인</button>
             </form>
           </div>
         </header>
