@@ -142,8 +142,8 @@ pipeline{
                     credentialsId: githubCredential,
                     url: 'https://github.com/moonstar0331/docker-fullstack-app-manifest.git'
 
-                    sh "sed -i 's/web:.*\$/frontend:${currentBuild.number}/g' web-deployment.yaml"
-                    sh "sed -i 's/api:.*\$/backend:${currentBuild.number}/g' api-deployment.yaml"
+                    sh "sed -i 's/frontend:.*\$/frontend:${currentBuild.number}/g' web-deployment.yaml"
+                    sh "sed -i 's/backend:.*\$/backend:${currentBuild.number}/g' api-deployment.yaml"
                     sh "sed -i 's/mysql:.*\$/mysql:${currentBuild.number}/g' mysql-deployment.yaml"
 
                     sh "git add ."

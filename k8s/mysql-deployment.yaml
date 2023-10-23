@@ -53,7 +53,7 @@ spec:
         tier: mysql
     spec:
       containers:
-        - image: moonsungkim/mysql
+        - image: moonsungkim/mysql:latest
           name: mysql
           env:
           - name: MYSQL_ROOT_PASSWORD
