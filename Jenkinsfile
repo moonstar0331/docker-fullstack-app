@@ -41,8 +41,8 @@ node {
         sh "git commit -m '[UPDATE] k8s ${currentBuild.number} image versioning'"
         sh "git branch -M main"
         sh "git remote remove origin"
-//         sh "git remote set-url origin https://github.com/moonstar0331/docker-fullstack-app-manifest"
-        sh "git remote add origin git@github.com:moonstar0331/docker-fullstack-app-manifest.git"
+        sh "git remote set-url origin git@github.com:moonstar0331/docker-fullstack-app-manifest.git"
+//         sh "git remote add origin git@github.com:moonstar0331/docker-fullstack-app-manifest.git"
         sh "git push -u origin main"
      }
 }
