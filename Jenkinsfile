@@ -74,13 +74,13 @@ pipeline{
 
         stage('docker image build'){
             steps{
-                sh "docker build . -t ${dockerHubRegistry}/frontend:${currentBuild.number}"
+                sh "docker build -t ${dockerHubRegistry}/frontend:${currentBuild.number} ./frontend"
                 sh "docker build . -t ${dockerHubRegistry}/frontend:latest"
 
-                sh "docker build . -t ${dockerHubRegistry}/backend:${currentBuild.number}"
+                sh "docker build . -t ${dockerHubRegistry}/backend:${currentBuild.number} ./backend"
                 sh "docker build . -t ${dockerHubRegistry}/backend:latest"
 
-                sh "docker build . -t ${dockerHubRegistry}/mysql:${currentBuild.number}"
+                sh "docker build . -t ${dockerHubRegistry}/mysql:${currentBuild.number} ./mysql"
                 sh "docker build . -t ${dockerHubRegistry}/mysql:latest"
             }
             post {
