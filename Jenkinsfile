@@ -27,7 +27,7 @@ node {
      stage('K8S Manifest Update') {
         // git 계정 로그인, 해당 리포지토리의 main 브랜치에서 클론
         git credentialsId: 'k8s_manifest_git',
-        url: 'https://github.com/moonstar0331/docker-fullstack-app-manifest',
+        url: 'git@github.com:moonstar0331/docker-fullstack-app-manifest.git',
         branch: 'main'
 
         // 이미지 태그 변경 후 메인 브랜치에 푸시
@@ -40,29 +40,21 @@ node {
         sh "git add ."
         sh "git commit -m '[UPDATE] k8s ${currentBuild.number} image versioning'"
         sh "git branch -M main"
-        sh "git remote remove origin"
+//         sh "git remote remove origin"
         sh "git remote set-url origin https://github.com/moonstar0331/docker-fullstack-app-manifest"
         sh "git push -u origin main"
      }
 }
-//
-// stage('Build image') {
-//   app = docker.build("gasbugs/flask-example")
-// }
-//
-// stage('Push image') {
-//   docker.withRegistry('https://registry.hub.docker.com', 'docker-hub')
-//   {
-//      app.push("${env.BUILD_NUMBER}")
-//      app.push("latest")
-//   }
-// }
-//
+
 // pipeline {
 //     agent any
 //
 //     environment {
+//         dockerHubRegistry = 'moonsungkim'
+//         dockerHubRegistryCredential = 'docker-hub'
 //         githubCredential = 'k8s_manifest_git'
+//         gitEmail = 'moonsung0331@gmail.com'
+//         gitName = 'moonstar0331'
 //     }
 //
 //     stages {
@@ -74,24 +66,23 @@ node {
 //
 //         stage('Build image') {
 //             steps {
-//                 frontend = docker.build("moonsungkim/frontend", "./frontend/")
-//                 backend = docker.build("moonsungkim/backend", "./backend/")
-//                 mysql = docker.build("moonsungkim/mysql", "./mysql/")
+//                 sh "docker build -t ${dockerHubRegistry}/frontend:${currentBuild.number} ./frontend/"
+//                 sh "docker build -t ${dockerHubRegistry}/backend:${currentBuild.number} ./backend/"
+//                 sh "docker build -t ${dockerHubRegistry}/mysql:${currentBuild.number} ./mysql/"
 //             }
-//
 //         }
 //
 //         stage('Push image') {
 //             steps {
-//                 docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-//                     frontend.push("${currentBuild.number}")
-//                     frontend.push("latest")
+//                 withDockerRegistry(credentialsId: dockerHubRegistryCredential, url: "https://registry.hub.docker.com") {
+//                     sh "docker push ${dockerHubRegistry}/frontend:${currentBuild.number}"
+//                     sh "docker push ${dockerHubRegistry}/frontend:latest"
 //
-//                     backend.push("${currentBuild.number}")
-//                     backend.push("latest")
+//                     sh "docker push ${dockerHubRegistry}/backend:${currentBuild.number}"
+//                     sh "docker push ${dockerHubRegistry}/backend:latest"
 //
-//                     mysql.push("${currentBuild.number}")
-//                     mysql.push("latest")
+//                     sh "docker push ${dockerHubRegistry}/mysql:${currentBuild.number}"
+//                     sh "docker push ${dockerHubRegistry}/mysql:latest"
 //                 }
 //             }
 //         }
