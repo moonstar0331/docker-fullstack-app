@@ -25,23 +25,21 @@ node {
          }
      }
      stage('K8S Manifest Update') {
-        steps {
-            // git 계정 로그인, 해당 리포지토리의 main 브랜치에서 클론
-            git credentialId: githubCredential,
-                url: 'https://github.com/moonstar0331/docker-fullstack-app-manifest',
-                branch: 'main'
+        // git 계정 로그인, 해당 리포지토리의 main 브랜치에서 클론
+        git credentialId: githubCredential,
+        url: 'https://github.com/moonstar0331/docker-fullstack-app-manifest',
+        branch: 'main'
 
-            // 이미지 태그 변경 후 메인 브랜치에 푸시
-            sh "sed -i 's/frontend:./frontend:${currentBuild.number}/g' web-deployment.yaml"
-            sh "sed -i 's/backend:./backend:${currentBuild.number}/g' api-deployment.yaml"
-            sh "sed -i 's/mysql:./mysql:${currentBuild.number}/g' mysql-deployment.yaml"
+        // 이미지 태그 변경 후 메인 브랜치에 푸시
+        sh "sed -i 's/frontend:./frontend:${currentBuild.number}/g' web-deployment.yaml"
+        sh "sed -i 's/backend:./backend:${currentBuild.number}/g' api-deployment.yaml"
+        sh "sed -i 's/mysql:./mysql:${currentBuild.number}/g' mysql-deployment.yaml"
 
-            sh "git add ."
-            sh "git commit -m '[UPDATE] k8s ${currentBuild.number} image versioning'"
-            sh "git branch -M main"
-            sh "git remote set-url origin https://github.com/moonstar0331/docker-fullstack-app-manifest"
-            sh "git push -u origin main"
-        }
+        sh "git add ."
+        sh "git commit -m '[UPDATE] k8s ${currentBuild.number} image versioning'"
+        sh "git branch -M main"
+        sh "git remote set-url origin https://github.com/moonstar0331/docker-fullstack-app-manifest"
+        sh "git push -u origin main"
      }
 }
 //
